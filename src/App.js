@@ -30,27 +30,33 @@ const ChatWindow = styled.div`
   gap: 10px;
 `;
 
+const MessageContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* 垂直排列訊息與按鈕 */
+  align-items: ${(props) => (props.isUser ? "flex-end" : "flex-start")}; /* 根據訊息的方向對齊 */
+  margin: 10px 0; /* 增加垂直間距 */
+`;
+
 const Message = styled.div`
   display: flex;
-  justify-content: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
   align-items: center;
   background: ${(props) => (props.isUser ? "#007bff" : "#e9ecef")};
   color: ${(props) => (props.isUser ? "white" : "black")};
   padding: 10px;
-  margin: 5px 0;
   border-radius: ${(props) =>
     props.isUser ? "10px 10px 0 10px" : "10px 10px 10px 0"};
   max-width: 70%;
-  word-break: break-word; /* 確保文字能換行 */
+  word-break: break-word; /* 確保文字換行 */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+  justify-content: ${(props) => (props.isUser ? "flex-end" : "flex-start")}; /* 按鈕根據訊息對齊 */
+  gap: 10px; /* 按鈕間距 */
+  margin-top: 5px; /* 與訊息之間的距離 */
+  width: 100%; /* 讓按鈕容器與父元素保持一致寬度 */
 `;
 
 const OptionButton = styled.button`
@@ -182,22 +188,13 @@ const App = () => {
   return (
     <AppContainer>
     <ChatWindow>
-      <Header>
-        {new Date()
-          .toLocaleDateString("zh-TW", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          })
-          .replace(/\//g, ".")}
-      </Header>
       {messages.map((msg, index) => (
-        <div key={index}>
+        <MessageContainer key={index} isUser={msg.isUser}>
           <Message isUser={msg.isUser}>
             <span>{msg.text}</span>
           </Message>
           {msg.options && (
-            <ButtonContainer>
+            <ButtonContainer isUser={msg.isUser}>
               {msg.options.map((option, idx) => (
                 <OptionButton key={idx} onClick={() => handleButtonClick(option)}>
                   {option}
@@ -205,7 +202,7 @@ const App = () => {
               ))}
             </ButtonContainer>
           )}
-        </div>
+        </MessageContainer>
       ))}
     </ChatWindow>
 
