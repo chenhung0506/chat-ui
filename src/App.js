@@ -114,7 +114,7 @@ const App = () => {
 
   // 預設按鈕數據
   const helloMsg = {
-    data: ["明日天氣預報", "降雨預報", "近期飆股", "留言"],
+    data: ["功能列表"],
     subType: "relatelist",
     type: "text",
     value: "歡迎使用以下功能",
@@ -127,6 +127,15 @@ const App = () => {
     ws.current.onopen = () => {
       console.log("WebSocket connected");
       setIsConnected(true);
+      ws.current.send(JSON.stringify(
+        {
+          code: 1,
+          mess: "功能列表",
+          domain: "example.com",
+          sessionId: sessionId.current,
+          uuid: uuid.current,
+        }
+      ));
     };
 
     ws.current.onmessage = (event) => {
@@ -162,7 +171,6 @@ const App = () => {
         code: 1,
         mess: message,
         domain: "example.com",
-        userList: ["user1", "user2"],
         sessionId: sessionId.current,
         uuid: uuid.current,
       };
@@ -180,6 +188,7 @@ const App = () => {
 
   const handleSend = () => {
     if (inputValue.trim()) {
+      console.log(inputValue)
       sendMessage(inputValue.trim());
       setInputValue("");
     }
@@ -188,6 +197,15 @@ const App = () => {
   return (
     <AppContainer>
     <ChatWindow>
+    <Header>
+          {new Date()
+            .toLocaleDateString("zh-TW", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\//g, ".")}
+    </Header>
       {messages.map((msg, index) => (
         <MessageContainer key={index} isUser={msg.isUser}>
           <Message isUser={msg.isUser}>
