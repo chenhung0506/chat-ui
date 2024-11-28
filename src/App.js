@@ -144,10 +144,10 @@ const App = () => {
       if (data.subType === "relatelist") {
         setMessages((prev) => [
           ...prev,
-          { text: data.value, isUser: false, options: data.data },
+          { text: data.value, isUser: false, options: data.data, showOptions: true },
         ]);
       } else {
-        setMessages((prev) => [...prev, { text: data.value, isUser: false }]);
+        setMessages((prev) => [...prev, { text: data.value, isUser: false, showOptions: true }]);
       }
       console.log(data);
     };
@@ -182,14 +182,19 @@ const App = () => {
       };
 
       ws.current.send(JSON.stringify(messageRequest));
-      setMessages((prev) => [...prev, { text: message, isUser: true }]);
+      setMessages((prev) => [...prev, { text: message, isUser: true, showOptions: true }]);
     } else {
       console.warn("WebSocket is not ready yet");
     }
   };
 
-  const handleButtonClick = (text) => {
-    sendMessage(text);
+  const handleButtonClick = (option, index) => {
+    setMessages((prevMessages) =>
+      prevMessages.map((msg, i) =>
+        i === index ? { ...msg, showOptions: false } : msg
+      )
+    );
+    sendMessage(option);
   };
 
   const handleSend = () => {
@@ -217,10 +222,10 @@ const App = () => {
           <Message isUser={msg.isUser}>
             <span>{msg.text}</span>
           </Message>
-          {msg.options && (
+          {msg.options && msg.showOptions && (
             <ButtonContainer isUser={msg.isUser}>
               {msg.options.map((option, idx) => (
-                <OptionButton key={idx} onClick={() => handleButtonClick(option)}>
+                <OptionButton key={idx} onClick={() => handleButtonClick(option, index)}>
                   {option}
                 </OptionButton>
               ))}
