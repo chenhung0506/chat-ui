@@ -46,10 +46,10 @@ const Message = styled.div`
   border-radius: ${(props) =>
     props.isUser ? "10px 10px 0 10px" : "10px 10px 10px 0"};
   max-width: 70%;
-  word-break: break-word; /* 確保文字換行 */
+  word-break: break-word;
+  white-space: pre-wrap; /* 支援換行符號 */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
-
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -111,7 +111,7 @@ const App = () => {
   const uuid = useRef(uuidv4());
   const sessionId = useRef(uuidv4());
   const [isConnected, setIsConnected] = useState(false); // 新增連線狀態
-
+  const chatWindowRef = useRef(null);
   // 預設按鈕數據
   const helloMsg = {
     data: ["功能列表"],
@@ -165,6 +165,12 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const sendMessage = (message) => {
     if (ws.current && isConnected) {
       const messageRequest = {
@@ -196,7 +202,7 @@ const App = () => {
 
   return (
     <AppContainer>
-    <ChatWindow>
+    <ChatWindow ref={chatWindowRef}>
     <Header>
           {new Date()
             .toLocaleDateString("zh-TW", {
