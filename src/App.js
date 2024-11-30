@@ -59,6 +59,13 @@ const ButtonContainer = styled.div`
   width: 100%; /* 讓按鈕容器與父元素保持一致寬度 */
 `;
 
+const DefaultButtonContainer = styled.div`
+  display: flex;
+  justify-content: ${(props) => (props.isUser ? "flex-end" : "flex-start")}; /* 按鈕根據訊息對齊 */
+  gap: 10px; /* 按鈕間距 */
+  margin-top: 5px; /* 與訊息之間的距離 */
+`;
+
 const OptionButton = styled.button`
   padding: 10px 15px;
   margin: 5px;
@@ -82,6 +89,7 @@ const InputContainer = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  position: relative; /* Needed for absolute positioning of SuggestionsContainer */
 `;
 
 const Input = styled.input`
@@ -106,15 +114,16 @@ const SendButton = styled.button`
 
 const SuggestionsContainer = styled.div`
   position: absolute;
-  top: 40px;
+  bottom: 100%; /* Position right below the input */
   left: 0;
-  width: 100%;
+  width: 100%; /* Make it the same width as the input */
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Optional: shadow for better visibility */
 `;
 
 const Suggestion = styled.div`
@@ -291,15 +300,6 @@ const App = () => {
       ))}
     </ChatWindow>
 
-
-      <ButtonContainer>
-        {helloMsg.data.map((option) => (
-          <OptionButton key={option} onClick={() => handleButtonClick(option)}>
-            {option}
-          </OptionButton>
-        ))}
-      </ButtonContainer>
-
       <InputContainer>
         <Input
           placeholder="想問什麼問題？"
@@ -307,6 +307,13 @@ const App = () => {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
+        <DefaultButtonContainer>
+          {helloMsg.data.map((option) => (
+            <OptionButton key={option} onClick={() => handleButtonClick(option)}>
+              {option}
+            </OptionButton>
+          ))}
+        </DefaultButtonContainer>
         <SendButton onClick={handleSend} disabled={!inputValue.trim() || !isConnected}>
           發送
         </SendButton>
