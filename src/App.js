@@ -104,14 +104,39 @@ const SendButton = styled.button`
   }
 `;
 
+const SuggestionsContainer = styled.div`
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+`;
+
+const Suggestion = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  background: ${(props) => (props.selected ? "#f0f0f0" : "transparent")};
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const ws = useRef(null);
   const uuid = useRef(uuidv4());
   const sessionId = useRef(uuidv4());
-  const [isConnected, setIsConnected] = useState(false); // 新增連線狀態
+  const [isConnected, setIsConnected] = useState(false);
   const chatWindowRef = useRef(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+
   // 預設按鈕數據
   const helloMsg = {
     data: ["功能列表"],
@@ -205,6 +230,37 @@ const App = () => {
     }
   };
 
+  const fetchSuggestions = async (query) => {
+    if (!query.trim()) return setSuggestions([]);
+    const response = await fetch(`http://localhost:3002/elk/autocomplete?query=${query}`);
+    console.log(response)
+    const data = await response.json();
+    setSuggestions(data || []);
+  };
+  
+  
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    fetchSuggestions(e.target.value);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputValue(suggestion);
+    setSuggestions([]);
+  };
+  
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && selectedSuggestionIndex !== -1) {
+      handleSuggestionClick(suggestions[selectedSuggestionIndex]);
+    } else if (e.key === "ArrowDown") {
+      setSelectedSuggestionIndex((prev) =>
+        prev < suggestions.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      setSelectedSuggestionIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    }
+  };
+
   return (
     <AppContainer>
     <ChatWindow ref={chatWindowRef}>
@@ -248,16 +304,25 @@ const App = () => {
         <Input
           placeholder="想問什麼問題？"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSend();
-            }
-          }}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
         <SendButton onClick={handleSend} disabled={!inputValue.trim() || !isConnected}>
           發送
         </SendButton>
+        {suggestions.length > 0 && (
+          <SuggestionsContainer>
+            {suggestions.map((suggestion, index) => (
+              <Suggestion
+                key={index}
+                onClick={() => handleSuggestionClick(suggestion)}
+                selected={index === selectedSuggestionIndex}
+              >
+                {suggestion}
+              </Suggestion>
+            ))}
+          </SuggestionsContainer>
+        )}
       </InputContainer>
     </AppContainer>
   );

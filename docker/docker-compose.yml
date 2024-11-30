@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  websocket-ui:
+    image: harbor.chlin.tk/vue/websocket-ui:37ac2b7-20210510-0048
+    container_name: websocket-ui
+    environment:
+      - TZ=Asia/Taipei
+    volumes:
+      - /etc/timezone:/etc/localtime:ro
+    ports: 
+      - 3003:3003
+    restart: always
+    networks: 
+      - nginx
+networks:
+  nginx:
+    external: true
+    name: nginx
