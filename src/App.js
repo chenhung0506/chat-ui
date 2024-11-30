@@ -9,7 +9,8 @@ const AppContainer = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 95vh;
+  overflow: hidden; /* 防止最外層容器出現滾動條 */
 `;
 
 const Header = styled.div`
@@ -114,16 +115,16 @@ const SendButton = styled.button`
 
 const SuggestionsContainer = styled.div`
   position: absolute;
-  bottom: 100%; /* Position right below the input */
+  bottom: 100%; /* Position above the input */
   left: 0;
-  width: 100%; /* Make it the same width as the input */
-  background-color: white;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
   border: 1px solid #ccc;
   border-radius: 5px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Optional: shadow for better visibility */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: shadow for better visibility */
 `;
 
 const Suggestion = styled.div`
@@ -174,7 +175,6 @@ const App = () => {
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      // 如果 subType 為 "relatelist"，顯示按鈕選項
       if (data.subType === "relatelist") {
         setMessages((prev) => [
           ...prev,
@@ -273,15 +273,15 @@ const App = () => {
   return (
     <AppContainer>
     <ChatWindow ref={chatWindowRef}>
-    <Header>
-          {new Date()
-            .toLocaleDateString("zh-TW", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
-            .replace(/\//g, ".")}
-    </Header>
+      <Header>
+            {new Date()
+              .toLocaleDateString("zh-TW", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+              .replace(/\//g, ".")}
+      </Header>
       {messages.map((msg, index) => (
         <MessageContainer key={index} isUser={msg.isUser}>
           <Message isUser={msg.isUser}>
