@@ -1,13 +1,8 @@
 #!/bin/bash
-REPO=harbor.emotibot.com/bfop
-CONTAINER=chat-room-ui
-TAG=base
-DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
-
-DOCKER_IMAGE=harbor.chlin.tk/vue/websocket-ui:latest
+DOCKER_IMAGE=harbor.linch.live/react/chat-ui:latest
 
 echo $DOCKER_IMAGE
 
-docker rm -f websocket-ui
+docker rm -f chat-ui
 
-docker run --name websocket-ui --restart always -p 3003:3003 -d $DOCKER_IMAGE nginx -g 'daemon off;'
+docker run --name chat-ui --restart always -p 3000:3000 -d $DOCKER_IMAGE nginx -g 'daemon off;'

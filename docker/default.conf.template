@@ -1,7 +1,6 @@
 
 server {
-
-    listen 3003;
+    listen 3000;
 
     location / {
         root /usr/share/nginx/html;

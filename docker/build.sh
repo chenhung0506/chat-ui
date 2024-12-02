@@ -1,6 +1,6 @@
 #!/bin/bash
-REPO=harbor.chlin.tk/vue
-CONTAINER=websocket-ui
+REPO=harbor.linch.live
+CONTAINER=chat-ui
 TAG=$(git rev-parse --short HEAD)-$(date '+%Y%m%d-%H%M') 
 TAG="latest"
 DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
@@ -27,7 +27,7 @@ do
     sed -e "s/\${API_IP}/$API_IP/g" >> default.conf
 done < default.conf.template
 
-cp -r ../app/dist/ ./ 
+cp -r ../app/build/ ./ 
 
 # Build docker
 cd $BUILDROOT
@@ -48,5 +48,5 @@ done
 
 echo $DOCKER_IMAGE
 
-docker rm -f websocket-ui
-docker run --name websocket-ui --restart always -p 3003:3003 -d $DOCKER_IMAGE nginx -g 'daemon off;'
+docker rm -f chat-ui
+docker run --name chat-ui --restart always -p 3000:3000 -d $DOCKER_IMAGE nginx -g 'daemon off;'
