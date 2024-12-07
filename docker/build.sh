@@ -1,5 +1,5 @@
 #!/bin/bash
-REPO=harbor.linch.live
+REPO=harbor.linch.live/react
 CONTAINER=chat-ui
 TAG=$(git rev-parse --short HEAD)-$(date '+%Y%m%d-%H%M') 
 TAG="latest"
