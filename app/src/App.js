@@ -34,18 +34,18 @@ const ChatWindow = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   flex-direction: column; /* 垂直排列訊息與按鈕 */
-  align-items: ${(props) => (props.isUser ? "flex-end" : "flex-start")}; /* 根據訊息的方向對齊 */
+  align-items: ${(props) => (props.$isUser ? "flex-end" : "flex-start")}; /* 根據訊息的方向對齊 */
   margin: 10px 0; /* 增加垂直間距 */
 `;
 
 const Message = styled.div`
   display: flex;
   align-items: center;
-  background: ${(props) => (props.isUser ? "#007bff" : "#e9ecef")};
-  color: ${(props) => (props.isUser ? "white" : "black")};
+  background: ${(props) => (props.$isUser ? "#007bff" : "#e9ecef")};
+  color: ${(props) => (props.$isUser ? "white" : "black")};
   padding: 10px;
   border-radius: ${(props) =>
-    props.isUser ? "10px 10px 0 10px" : "10px 10px 10px 0"};
+    props.$isUser ? "10px 10px 0 10px" : "10px 10px 10px 0"};
   max-width: 70%;
   word-break: break-word;
   white-space: pre-wrap; /* 支援換行符號 */
@@ -246,8 +246,7 @@ const App = () => {
     const data = await response.json();
     setSuggestions(data || []);
   };
-  
-  
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
     fetchSuggestions(e.target.value);
@@ -283,12 +282,12 @@ const App = () => {
               .replace(/\//g, ".")}
       </Header>
       {messages.map((msg, index) => (
-        <MessageContainer key={index} isUser={msg.isUser}>
-          <Message isUser={msg.isUser}>
+        <MessageContainer key={index} $isUser={msg.isUser}>
+          <Message $isUser={msg.isUser}>
             <span>{msg.text}</span>
           </Message>
           {msg.options && msg.showOptions && (
-            <ButtonContainer isUser={msg.isUser}>
+            <ButtonContainer $isUser={msg.isUser}>
               {msg.options.map((option, idx) => (
                 <OptionButton key={idx} onClick={() => handleButtonClick(option, index)}>
                   {option}
