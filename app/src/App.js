@@ -201,7 +201,10 @@ const App = () => {
       setIsConnected(false);
     };
     return () => {
-      // if (ws.current) ws.current.close();
+      if (ws.current) {
+        ws.current.close();
+        console.log("WebSocket connection closed.");
+      }
     };
   }, []);
 

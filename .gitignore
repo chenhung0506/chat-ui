@@ -5,6 +5,7 @@ app/node_modules
 app/.pnp
 app/.pnp.js
 docker/build/
+docker/build
 app/build/
 # testing
 app/coverage
