@@ -27,7 +27,11 @@ do
     sed -e "s/\${API_IP}/$API_IP/g" >> default.conf
 done < default.conf.template
 
+cmd="cd $BUILDROOT/app && npm run build && cd $BUILDROOT/docker && sleep 3"
+echo $cmd
+eval $cmd
 cp -r ../app/build/ ./ 
+sleep 3
 
 # Build docker
 cd $BUILDROOT
