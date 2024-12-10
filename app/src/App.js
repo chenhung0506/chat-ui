@@ -158,9 +158,9 @@ const App = () => {
   // 初始化 WebSocket
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    const websocketDomain = process.env.REACT_APP_WEBSOCKET_DOMAIN || '139.162.2.175';
-    const websocketPort = process.env.REACT_APP_WEBSOCKET_PORT || '3002';
-    const hostname = `${websocketDomain}:${websocketPort}`;
+    const websocketDomain = process.env.REACT_APP_WEBSOCKET_DOMAIN;
+    const websocketPort = process.env.REACT_APP_WEBSOCKET_PORT;
+    const hostname = `${websocketDomain}${websocketPort}`;
     const websocketUrl = `${protocol}${hostname}/websocket/${uuid.current}`;
     console.log("Connecting to WebSocket URL:", websocketUrl);
     ws.current = new WebSocket(websocketUrl);
@@ -250,9 +250,9 @@ const App = () => {
 
   const fetchSuggestions = async (query) => {
     if (!query.trim()) return setSuggestions([]);
-    const elkDomain = process.env.REACT_APP_ELK_DOMAIN || '139.162.2.175';
-    const elkPort = process.env.REACT_APP_ELK_PORT || '3002';
-    const response = await fetch(`${window.location.protocol === 'https:' ? 'https' : 'http'}://${elkDomain}:${elkPort}/elk/autocomplete?query=${query}`);
+    const elkDomain = process.env.REACT_APP_ELK_DOMAIN;
+    const elkPort = process.env.REACT_APP_ELK_PORT;
+    const response = await fetch(`${window.location.protocol === 'https:' ? 'https' : 'http'}://${elkDomain}${elkPort}/elk/autocomplete?query=${query}`);
     console.log(response)
     const data = await response.json();
     setSuggestions(data || []);
