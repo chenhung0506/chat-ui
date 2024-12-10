@@ -241,10 +241,12 @@ const App = () => {
   };
 
   const handleSend = () => {
-    if (inputValue.trim()) {
+    if (inputValue && inputValue.trim()) {
       console.log(inputValue)
       sendMessage(inputValue.trim());
       setInputValue("");
+    } else {
+      console.warn("Input value is invalid or empty.");
     }
   };
 
@@ -267,10 +269,15 @@ const App = () => {
     setInputValue(suggestion);
     setSuggestions([]);
   };
-  
+
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && selectedSuggestionIndex !== -1) {
-      handleSuggestionClick(suggestions[selectedSuggestionIndex]);
+    if (e.key === "Enter") {
+      if (selectedSuggestionIndex !== -1) {
+        setSelectedSuggestionIndex(-1)
+        handleSuggestionClick(suggestions[selectedSuggestionIndex]);
+      } else {
+        handleSend(); // 如果沒有選中建議，發送當前輸入值
+      }
     } else if (e.key === "ArrowDown") {
       setSelectedSuggestionIndex((prev) =>
         prev < suggestions.length - 1 ? prev + 1 : prev
