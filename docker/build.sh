@@ -8,7 +8,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILDROOT=$DIR/..
 echo $BUILDROOT
 
-# init nginx default.conf
 rm default.conf
 # Windows
 # SELF_IP=`ifconfig | grep -A 1 eth0 | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | head -n1`;
@@ -52,5 +51,6 @@ done
 
 echo $DOCKER_IMAGE
 
-docker rm -f chat-ui
-# docker run --name chat-ui --restart always -p 3000:3000 -d $DOCKER_IMAGE nginx -g 'daemon off;'
+if [ $(docker ps -a -q -f name=chat-ui) ]; then
+    docker rm -f chat-ui
+fi

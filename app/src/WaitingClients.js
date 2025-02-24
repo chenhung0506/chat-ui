@@ -37,11 +37,16 @@ const ClientItem = styled.div`
 
 const WaitingClients = ({ serviceId, onClientSelect, setMessages }) => {
   const [clients, setClients] = useState([]);
+  const protocol = window.location.protocol;
+  const Domain = process.env.REACT_APP_WEBSOCKET_DOMAIN;
+  const Port = process.env.REACT_APP_WEBSOCKET_PORT;
+  const hostname = `${Domain}${Port}`;
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await fetch("http://localhost:3002/waiting-clients");
+        const waitingClientsUrl = `${protocol}//${hostname}/waiting-clients`;
+        const response = await fetch(waitingClientsUrl);
         const data = await response.json();
         console.log(data);
         setClients(data.waiting_clients || []);
@@ -52,11 +57,12 @@ const WaitingClients = ({ serviceId, onClientSelect, setMessages }) => {
 
     fetchClients();
 
-  }, [serviceId]);
+  }, [serviceId, protocol, hostname]);
 
   const handleAssignClient = async (clientId) => {
     try {
-      const response = await fetch("http://localhost:3002/assign-client", {
+      const handleAssignClientUrl = `${protocol}//${hostname}/assign-client`;
+      const response = await fetch(handleAssignClientUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

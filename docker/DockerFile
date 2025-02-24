@@ -5,7 +5,7 @@ RUN apk update && \
     cp -rf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
  
 # 設置變量
-ENV NGINX_VERSION 1.14.0
+ENV NGINX_VERSION=1.14.0
 RUN ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
 RUN echo 'Asia/Taipei' >/etc/timezone
 
