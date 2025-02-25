@@ -56,7 +56,8 @@ const WaitingClients = ({ serviceId, onClientSelect, setMessages }) => {
     };
 
     fetchClients();
-
+    const intervalId = setInterval(fetchClients, 5000);
+    return() => clearInterval(intervalId);
   }, [serviceId, protocol, hostname]);
 
   const handleAssignClient = async (clientId) => {
@@ -74,7 +75,8 @@ const WaitingClients = ({ serviceId, onClientSelect, setMessages }) => {
       console.log(data.data.Messages);
 
       if (data.data && data.data.Messages) {
-        const messages = data.data.Messages
+        const messages = data.data.Messages;
+        setMessages([]); // 先清空 Messages
         for (let i = 0; i < messages.length; i++) {
             setMessages((prev) => [...prev,{ text: messages[i].value, isClient: messages[i].isClient, showOptions: false }]);
         }
