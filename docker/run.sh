@@ -1,5 +1,5 @@
 #!/bin/bash
-DOCKER_IMAGE=harbor.linch.live/react/chat-ui:latest
+DOCKER_IMAGE=react/chat-ui:latest
 
 echo $DOCKER_IMAGE
 

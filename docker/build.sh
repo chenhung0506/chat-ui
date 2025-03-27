@@ -1,9 +1,7 @@
 #!/bin/bash
-REPO=harbor.linch.live/react
-CONTAINER=chat-ui
-TAG=$(git rev-parse --short HEAD)-$(date '+%Y%m%d-%H%M') 
+# TAG=$(git rev-parse --short HEAD)-$(date '+%Y%m%d-%H%M') 
 TAG="latest"
-DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
+DOCKER_IMAGE=react/chat-ui:$TAG
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILDROOT=$DIR/..
 echo $BUILDROOT
@@ -11,7 +9,7 @@ echo $BUILDROOT
 rm default.conf
 # Windows
 # SELF_IP=`ifconfig | grep -A 1 eth0 | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | head -n1`;
-SELF_IP=`ip addr | grep -A 1 eth0 | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | awk -F '/' '{print $1}'`;
+SELF_IP=$(ip addr | grep -A 1 eth0 | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1')
 
 echo $SELF_IP
 

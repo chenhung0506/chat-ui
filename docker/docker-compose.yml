@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   chat-ui:
-    image:  harbor.linch.live/react/chat-ui:latest
+    image:  react/chat-ui:latest
     container_name: chat-ui
     environment:
       - TZ=Asia/Taipei
